@@ -146,3 +146,7 @@ footer {
     }
 
 }
+
+a:visited {
+  color: blue; /* Replace 'blue' with your website's link color */
+}
