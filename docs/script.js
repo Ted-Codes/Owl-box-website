@@ -170,6 +170,25 @@ function createCharts(data) {
     );
 }
 
+const shareBtn = document.getElementById('nativeShareBtn');
+
+// Hide the button if the browser doesn't support native sharing
+if (shareBtn && !navigator.share) {
+  shareBtn.style.display = 'none';
+}
+
+// Trigger the native device share menu when clicked
+shareBtn?.addEventListener('click', async () => {
+  try {
+    await navigator.share({
+      title: document.title,
+      url: window.location.href
+    });
+  } catch (err) {
+    console.log('Share canceled or failed:', err);
+  }
+});
+
 // Initial load
 loadData();
 
