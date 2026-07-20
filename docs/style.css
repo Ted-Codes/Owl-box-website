@@ -218,6 +218,8 @@ footer {
 .share-button:hover {
     background: #6fae53;
     color: #101820;
+}
+
 .share-button:visited {
     color: #f5f5f5;
 }
