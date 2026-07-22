@@ -106,21 +106,62 @@ function createCharts(data) {
     // ==========================
     // Owl Activity Chart
     // ==========================
+    function createCharts(data) {
+    // Track the peak owlet count per calendar day, for the last 7 days
+    const dailyMaxBabies = {}; // "M/D/YYYY" -> max baby count that day
+    const temperatureTimes = [];
+    const temperatures = [];
+
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    sevenDaysAgo.setHours(0, 0, 0, 0);
+
+    data.forEach(row => {
+        const timestamp = new Date(row[1]);
+        const babyNumber = Number(row[2]);
+        const temperature = Number(row[5]);
+
+        // Temperature chart (unchanged)
+        temperatureTimes.push(row[1]);
+        temperatures.push(temperature);
+
+        // Owl activity: keep the largest reading per day
+        if (!isNaN(timestamp.getTime()) && timestamp >= sevenDaysAgo) {
+            const dayKey = timestamp.toLocaleDateString(); // e.g. "7/22/2026"
+            if (!(dayKey in dailyMaxBabies) || babyNumber > dailyMaxBabies[dayKey]) {
+                dailyMaxBabies[dayKey] = babyNumber;
+            }
+        }
+    });
+
+    // Build the last 7 calendar days in order, even if some have no data
+    const labels = [];
+    const peakCounts = [];
+    for (let i = 6; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        const dayKey = d.toLocaleDateString();
+        labels.push(d.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" }));
+        peakCounts.push(dailyMaxBabies[dayKey] || 0);
+    }
+
+    // Destroy old charts before redrawing
+    if (owlChart) owlChart.destroy();
+    if (tempChart) tempChart.destroy();
+
+    // ==========================
+    // Owl Activity Chart (daily peak)
+    // ==========================
     owlChart = new Chart(
         document.getElementById("owlChart"),
         {
             type: "bar",
             data: {
-                labels: [
-                    "12 AM","1 AM","2 AM","3 AM","4 AM","5 AM",
-                    "6 AM","7 AM","8 AM","9 AM","10 AM","11 AM",
-                    "12 PM","1 PM","2 PM","3 PM","4 PM","5 PM",
-                    "6 PM","7 PM","8 PM","9 PM","10 PM","11 PM"
-                ],
+                labels: labels,
                 datasets: [
                     {
-                        label: "Baby Owls Detected (Last 7 Days)",
-                        data: hourlyBabyCounts,
+                        label: "Peak Owlet Count",
+                        data: peakCounts,
                         borderWidth: 1,
                         borderRadius: 6
                     }
@@ -131,15 +172,13 @@ function createCharts(data) {
                 plugins: {
                     title: {
                         display: true,
-                        text: "Owlet Count Over the Last 7 Days"
+                        text: "Owlet Count Over the Last 7 Days (Daily Peak)"
                     }
                 },
                 scales: {
                     y: {
                         beginAtZero: true,
-                        ticks: {
-                            precision: 0
-                        }
+                        ticks: { precision: 0 }
                     }
                 }
             }
@@ -147,7 +186,7 @@ function createCharts(data) {
     );
 
     // ==========================
-    // Temperature Chart
+    // Temperature Chart (unchanged)
     // ==========================
     tempChart = new Chart(
         document.getElementById("tempChart"),
