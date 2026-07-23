@@ -36,6 +36,7 @@ async function loadData() {
         const babyCount = beforebabyCount;
         const adultCount = beforeadultCount;
 
+        const confindence = latest[4];
         const temperature = latest[5];
         const weather = latest[6] || "";
 
@@ -47,6 +48,8 @@ async function loadData() {
             temperature + "°F";
         document.getElementById("weather").textContent =
             weather;
+        document.getElementById("confidence").textContent =
+            confidence;
         document.getElementById("updated").textContent =
             latest[1];
 
