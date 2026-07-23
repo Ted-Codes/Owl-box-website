@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Owl Box Dashboard</title>
+    <title>Nest Metrics</title>
     <link rel="icon" type="image/png" href="owl-favicon-32x32.png">
 
     <!-- Styling -->
@@ -17,26 +17,29 @@
 
     <header>
         <h1>NestMetrics 🦉</h1>
-        <p>Live Wildlife Monitoring Dashboard</p>
+        <p>Beta</p>
+        <p>Smart Owl Box Analytics | Live Wildlife Monitoring Dashboard</p>
+        <button id="nativeShareBtn" class="share-button">    🔗 Share 🔗    </button>
     </header>
 
 
     <main>
 
         <nav class="stream-nav">
-            <a href="index.html" class="stream-btn">Stream 1</a>
-            <a href="stream2.html" class="stream-btn active">Stream 2</a>
-            <a href="stream3.html" class="stream-btn">Stream 3</a>
-            <a href="stream4.html" class="stream-btn">Stream 4</a>
+            <a href="index.html" class="stream-btn">Stream 1 | Arlington</a>
+            <a href="stream2.html" class="stream-btn active">Stream 2 | Peaks District</a>
+            <a href="stream3.html" class="stream-btn">Stream 3 | Livermore</a>
+            <a href="about.html" class="stream-btn">About</a>
         </nav>
         
         <!-- Live Stream -->
         <section class="card">
-            <h2>🎥 Live Camera #2 (PLACEHOLDER)</h2>
+            <h2>🎥 Livestream from National Trust's Arlington Court Estate, Devon, UK.</h2>
+            <p>NestMetrics analyzes barn owl livestreams using computer vision to measure owl activity and behavior patterns over time.</p>
 
             <div class="video-container">
                 <iframe
-                    src=""
+                    src="https://www.youtube.com/embed/SuNY8WJ16ok?autoplay=1&mute=1"
                     title="Smart Owl Box Live Stream"
                     allow="autoplay; encrypted-media; picture-in-picture"
                     allowfullscreen>
@@ -50,22 +53,15 @@
         <section class="dashboard-grid">
 
             <div class="card">
-                <h2>🦉 Owl Count</h2>
+                <h2>🪺 Estimated Owlet Count</h2>
                 <p id="owl-count">Loading...</p>
+                <h2>Owlets may overlap or be partially obscured</h2>
             </div>
-
 
             <div class="card">
-                <h2>🌡 Temperature</h2>
-                <p id="temperature">Loading...</p>
+                <h2>🦉 Estimated Adult Count</h2>
+                <p id="adult-owl-count">Loading...</p>
             </div>
-
-
-            <div class="card">
-                <h2>🌦️ Weather</h2>
-                <p id="weather">Loading...</p>
-            </div>
-
 
             <div class="card">
                 <h2>🕒 Last Updated</h2>
@@ -73,35 +69,43 @@
             </div>
 
         </section>
-
-
+        
         <!-- Graphs -->
         <section class="card">
             <h2>📈 Owl Activity</h2>
             <canvas id="owlChart"></canvas>
         </section>
 
+        <!-- Temperature & Weather -->
+
+        <section class="weather-dashboard-grid">
+
+            <div class="card">
+                <h2>🌡 Current Temperature</h2>
+                <p id="temperature">Loading...</p>
+            </div>
+
+            <div class="card">
+                <h2>🌦️ Current Weather</h2>
+                <p id="weather">Loading...</p>
+            </div>
+            
+        </section>  
+
+        <!-- Temp Graph -->        
 
         <section class="card">
             <h2>🌡 Temperature History</h2>
             <canvas id="tempChart"></canvas>
         </section>
 
-        <div class="card">
-                <h2>About me</h2>
-                <nav>
-                    <a href="about.html">Learn More About Me</a>
-                </nav>
-            
-                <p>Contact at: tbrzusto@gmail.com</p>
-        </div>
-
-
     </main>
 
 
     <footer>
-        <p>NestMetrics | Created by Ted Brzustowicz</p>
+        <p>Livestream embedded from YouTube</p>
+        <p>NestMetrics Software, Analytics, and Website © 2026 Ted Brzustowicz. All Rights Reserved</p>
+
     </footer>
 
 
