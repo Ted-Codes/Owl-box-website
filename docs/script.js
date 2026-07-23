@@ -36,7 +36,7 @@ async function loadData() {
         const babyCount = beforebabyCount;
         const adultCount = beforeadultCount;
 
-        const confindence = latest[4];
+        const confidence = latest[4];
         const temperature = latest[5];
         const weather = latest[6] || "";
 
