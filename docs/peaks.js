@@ -74,42 +74,33 @@ async function loadData() {
 }
 
 function createCharts(data) {
-    // Track the peak owlet count per calendar day, for the last 7 days
-    const dailyMaxBabies = {}; // "M/D/YYYY" -> max baby count that day
+    // Track owl sightings by hour of day (0–23), across all available data
+    const sightingsByHour = new Array(24).fill(0);
+
     const temperatureTimes = [];
     const temperatures = [];
 
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-    sevenDaysAgo.setHours(0, 0, 0, 0);
-
     data.forEach(row => {
         const timestamp = new Date(row[1]);
-        const babyNumber = Number(row[2]);
+        const owlNumber = Number(row[3]); // Adult Owl Number — matches "Estimated Owl Count" card
         const temperature = Number(row[5]);
 
-        // Temperature chart
+        // Temperature chart (unchanged)
         temperatureTimes.push(row[1]);
         temperatures.push(temperature);
 
-        // Owl activity: keep the largest reading per day
-        if (!isNaN(timestamp.getTime()) && timestamp >= sevenDaysAgo) {
-            const dayKey = timestamp.toLocaleDateString(); // e.g. "7/22/2026"
-            if (!(dayKey in dailyMaxBabies) || babyNumber > dailyMaxBabies[dayKey]) {
-                dailyMaxBabies[dayKey] = babyNumber;
-            }
+        // Count a sighting whenever an owl was present, bucketed by hour of day
+        if (!isNaN(timestamp.getTime()) && owlNumber > 0) {
+            sightingsByHour[timestamp.getHours()]++;
         }
     });
 
-    // Build the last 7 calendar days in order, even if some have no data
+    // Build 12 AM–11 PM hour labels
     const labels = [];
-    const peakCounts = [];
-    for (let i = 6; i >= 0; i--) {
-        const d = new Date();
-        d.setDate(d.getDate() - i);
-        const dayKey = d.toLocaleDateString();
-        labels.push(d.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" }));
-        peakCounts.push(dailyMaxBabies[dayKey] || 0);
+    for (let h = 0; h < 24; h++) {
+        const period = h < 12 ? "AM" : "PM";
+        const hour12 = h % 12 === 0 ? 12 : h % 12;
+        labels.push(`${hour12} ${period}`);
     }
 
     // Destroy old charts before redrawing
@@ -117,7 +108,7 @@ function createCharts(data) {
     if (tempChart) tempChart.destroy();
 
     // ==========================
-    // Owl Activity Chart (daily peak)
+    // Owl Sightings by Hour Chart
     // ==========================
     owlChart = new Chart(
         document.getElementById("owlChart"),
@@ -127,8 +118,8 @@ function createCharts(data) {
                 labels: labels,
                 datasets: [
                     {
-                        label: "Peak Owlet Count",
-                        data: peakCounts,
+                        label: "Owl Sightings",
+                        data: sightingsByHour,
                         borderWidth: 1,
                         borderRadius: 6
                     }
@@ -139,13 +130,16 @@ function createCharts(data) {
                 plugins: {
                     title: {
                         display: true,
-                        text: "Owlet Count Over the Last 7 Days (Daily Peak)"
+                        text: "Owl Sightings in the Box by Hour of Day"
                     }
                 },
                 scales: {
                     y: {
                         beginAtZero: true,
                         ticks: { precision: 0 }
+                    },
+                    x: {
+                        title: { display: true, text: "Hour of Day" }
                     }
                 }
             }
@@ -153,7 +147,7 @@ function createCharts(data) {
     );
 
     // ==========================
-    // Temperature Chart
+    // Temperature Chart (unchanged)
     // ==========================
     tempChart = new Chart(
         document.getElementById("tempChart"),
